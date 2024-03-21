@@ -15,6 +15,7 @@ public class ClientHandler extends Thread{
 
 	@Override
 	public void run() {
+		System.out.println("Running Thread"+ this.getName());
 		try (BufferedReader inputStreamReader = new BufferedReader(
 				new InputStreamReader(clientSocket.getInputStream()));
 			 OutputStream outputStream = clientSocket.getOutputStream();
@@ -49,6 +50,7 @@ public class ClientHandler extends Thread{
 
 			outputStream.write(httpResponse.toString().getBytes(StandardCharsets.UTF_8));
 			outputStream.flush();
+			clientSocket.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
