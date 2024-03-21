@@ -106,7 +106,7 @@ public class Main {
               File newFile = new File(filepath);
               try(FileWriter fileWriter = new FileWriter(newFile)) {
                   String s;
-                  while( !(s = inputStreamReader.readLine()).isBlank() ) {
+                  while( !(s = inputStreamReader.readLine()).isEmpty() ) {
                       System.out.println(s);
                   }
                   while(!(s = inputStreamReader.readLine()).isEmpty())
