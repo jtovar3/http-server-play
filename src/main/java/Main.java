@@ -108,10 +108,8 @@ public class Main {
                   String s;
                   while( (s = inputStreamReader.readLine()) != null ) {
                       System.out.println(s);
+                      fileWriter.write(s);
                   }
-                  while(!(s = inputStreamReader.readLine()).isEmpty())
-                      System.out.println(s);
-                  fileWriter.write(s);
               }
               httpResponse.append("HTTP/1.1 201 OK\r\n\r\n");
           }
