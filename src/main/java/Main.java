@@ -1,3 +1,4 @@
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -21,6 +22,14 @@ public class Main {
          while (true) {
              clientSocket = serverSocket.accept(); // Wait for connection from client.
              System.out.println("accepted new connection");
+
+             var inputS = new BufferedInputStream(clientSocket.getInputStream());
+             byte[] buffer = new byte[1024];    //If you handle larger data use a bigger buffer size
+             int read;
+             while((read = inputS.read(buffer)) != -1) {
+                 System.out.println(read);
+                 // Your code to handle the data
+             }
              String httpResponse = "HTTP/1.1 200 OK\r\n\r\n";
              OutputStream outputStream = clientSocket.getOutputStream();
              outputStream.write(httpResponse.getBytes(StandardCharsets.UTF_8));
