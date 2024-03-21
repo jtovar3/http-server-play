@@ -77,7 +77,7 @@ public class Main {
                       .append("Content-Length: " + echo.length() + "\r\n\r\n")
                       .append(echo);
 
-          } else if(arg[1].startsWith("/files")){
+          } else if(arg[0].equalsIgnoreCase("GET") && arg[1].startsWith("/files")){
               System.out.println("Directory request");
               String filename = arg[1].substring(7); //ignores first slash (/) as is already included iin directory path
               String filepath = directoryPath + filename;
