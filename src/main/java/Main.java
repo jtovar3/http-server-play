@@ -105,9 +105,10 @@ public class Main {
               System.out.println("saving file: " + filepath);
               File newFile = new File(filepath);
               try(FileWriter fileWriter = new FileWriter(newFile)) {
-                  while( !inputStreamReader.readLine().isBlank() ) {
-                  }
                   String s;
+                  while( !(s = inputStreamReader.readLine()).isBlank() ) {
+                      System.out.println(s);
+                  }
                   while(!(s = inputStreamReader.readLine()).isEmpty())
                       System.out.println(s);
                   fileWriter.write(s);
