@@ -43,7 +43,7 @@ public class Main {
 
                  } else if(arg[1].equals("/user-agent")) {
                      String s;
-                     while((s = inputStreamReader.readLine()) != null) {
+                     while(!(s = inputStreamReader.readLine()).isEmpty()) {
                          arg = s.split(" ");
                          if(arg[0].equalsIgnoreCase("USER-AGENT:")) {
                              break;
