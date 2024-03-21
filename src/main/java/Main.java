@@ -1,5 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -19,12 +21,13 @@ public class Main {
     System.out.println("Logs from your program will appear here!");
     ServerSocket serverSocket = null;
     Socket clientSocket = null;
+    String directoryPath = "";
     ExecutorService executorService = Executors.newCachedThreadPool();
-
-      for (var s:args
-           ) {
-          System.out.println(s);
-
+      for (int i = 0; i < args.length;  i++) {
+          if(args[i].equalsIgnoreCase("--directory")) {
+              directoryPath = args[i+1];
+              break;
+          }
       }
 
      try {
@@ -35,7 +38,8 @@ public class Main {
              if(clientSocket.isConnected()) {
                  //new ClientHandler(clientSocket).start();
                  Socket finalClientSocket = clientSocket;
-                 executorService.submit(() -> handleClient(finalClientSocket));
+                 String finalDirectoryPath = directoryPath;
+                 executorService.submit(() -> handleClient(finalClientSocket, finalDirectoryPath));
              System.out.println("accepted new connection");
              }
          }
@@ -43,7 +47,7 @@ public class Main {
        System.out.println("IOException: " + e.getMessage());
      }
   }
-  public static void handleClient(Socket clientSocket) {
+  public static void handleClient(Socket clientSocket, String directoryPath) {
       try (BufferedReader inputStreamReader = new BufferedReader(
               new InputStreamReader(clientSocket.getInputStream()));
            OutputStream outputStream = clientSocket.getOutputStream();
@@ -72,7 +76,24 @@ public class Main {
                       .append("Content-Length: " + echo.length() + "\r\n\r\n")
                       .append(echo);
 
-          } else {
+          } else if(arg[1].startsWith("/files")){
+              System.out.println("Directory request");
+              String filename = arg[1].substring(7); //ignores first slash (/) as is already included iin directory path
+              String filepath = directoryPath + filename;
+              System.out.println("looking for: " + filepath);
+              if(new File(filepath).exists()){
+                  try(FileInputStream r = new FileInputStream(filepath)) {
+                      byte[] content = r.readAllBytes();
+                      var echo = new String(content);
+                      httpResponse.append("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\n")
+                              .append("Content-Length: " + echo.length() + "\r\n\r\n")
+                              .append(echo);
+                  }
+              } else {
+                  httpResponse.append("HTTP/1.1 404 BAD\r\n\r\n");
+              }
+
+          }else {
               httpResponse.append("HTTP/1.1 404 BAD\r\n\r\n");
           }
 
