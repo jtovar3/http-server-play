@@ -32,18 +32,33 @@ public class Main {
              ) {
                  String[] arg = inputStreamReader.readLine().split(" ");
                  System.out.println(Arrays.toString(arg));
-                 String httpResponse;
+                 StringBuilder httpResponse = new StringBuilder();
                  if(arg[1].equals("/")) {
-                     httpResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\nabc\r\n\r\n";
+                     httpResponse.append("HTTP/1.1 200 OK\r\n\r\n");
                  } else if(arg[1].startsWith("/echo/")) {
-                     httpResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n";
-                     httpResponse = httpResponse + "Content-Length: " + arg[1].substring(6).length() + "\r\n\r\n";
-                     httpResponse = httpResponse + arg[1].substring(6);
+                     String echo = arg[1].substring(6);
+                     httpResponse.append("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n")
+                             .append("Content-Length: " + echo.length() + "\r\n\r\n")
+                             .append(echo);
+
+                 } else if(arg[1].equals("/user-agent")) {
+                     String s;
+                     while((s = inputStreamReader.readLine()) != null) {
+                         arg = s.split(" ");
+                         if(arg[0].equalsIgnoreCase("USER-AGENT:")) {
+                             break;
+                         }
+                     }
+                     String echo = arg[1];
+                     httpResponse.append("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n")
+                             .append("Content-Length: " + echo.length() + "\r\n\r\n")
+                             .append(echo);
+
                  } else {
-                     httpResponse = "HTTP/1.1 404 BAD\r\n\r\n";
+                     httpResponse.append("HTTP/1.1 404 BAD\r\n\r\n");
                  }
 
-                 outputStream.write(httpResponse.getBytes(StandardCharsets.UTF_8));
+                 outputStream.write(httpResponse.toString().getBytes(StandardCharsets.UTF_8));
                  outputStream.flush();
              }
 
