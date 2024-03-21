@@ -34,7 +34,11 @@ public class Main {
                  System.out.println(Arrays.toString(arg));
                  String httpResponse;
                  if(arg[1].equals("/")) {
-                     httpResponse = "HTTP/1.1 200 OK\r\n\r\n";
+                     httpResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\n\r\nabc\r\n\r\n";
+                 } else if(arg[1].startsWith("/echo/")) {
+                     httpResponse = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n";
+                     httpResponse = httpResponse + "Content-Length: " + arg[1].substring(6).length() + "\r\n\r\n";
+                     httpResponse = httpResponse + arg[1].substring(6);
                  } else {
                      httpResponse = "HTTP/1.1 404 BAD\r\n\r\n";
                  }
