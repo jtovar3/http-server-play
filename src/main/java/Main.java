@@ -102,13 +102,14 @@ public class Main {
               System.out.println("Directory POST request");
               String filename = arg[1].substring(7); //ignores first slash (/) as is already included iin directory path
               String filepath = directoryPath + filename;
-              System.out.println("looking for: " + filepath);
+              System.out.println("saving file: " + filepath);
               File newFile = new File(filepath);
               try(FileWriter fileWriter = new FileWriter(newFile)) {
                   while( !inputStreamReader.readLine().isBlank() ) {
                   }
                   String s;
                   while(!(s = inputStreamReader.readLine()).isEmpty())
+                      System.out.println(s);
                   fileWriter.write(s);
               }
               httpResponse.append("HTTP/1.1 201 OK\r\n\r\n");
