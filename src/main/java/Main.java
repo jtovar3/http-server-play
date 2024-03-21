@@ -106,9 +106,14 @@ public class Main {
               File newFile = new File(filepath);
               try(FileWriter fileWriter = new FileWriter(newFile)) {
                   String s;
-                  while( (s = inputStreamReader.readLine()) != null ) {
-                      System.out.println(s);
-                      fileWriter.write(s);
+                  StringBuilder requestBuilder = new StringBuilder();
+                  String line;
+                  while ((line = inputStreamReader.readLine()) != null && !line.isEmpty()) {
+                      requestBuilder.append(line).append("\r\n");
+                  }
+                  requestBuilder.append("\r\n");
+                  while (inputStreamReader.ready()) {
+                      fileWriter.write((char)inputStreamReader.read());
                   }
               }
               httpResponse.append("HTTP/1.1 201 OK\r\n\r\n");
