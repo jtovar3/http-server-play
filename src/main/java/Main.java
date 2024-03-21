@@ -2,6 +2,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -86,14 +87,33 @@ public class Main {
                       byte[] content = r.readAllBytes();
                       var echo = new String(content);
                       httpResponse.append("HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\n")
-                              .append("Content-Length: " + echo.length() + "\r\n\r\n")
-                              .append(echo);
+                              .append("Content-Length: " + content.length + "\r\n\r\n");
+                      outputStream.write(httpResponse.toString().getBytes(StandardCharsets.UTF_8));
+                      outputStream.write(content);
+                      outputStream.flush();
+                      clientSocket.close();
+                      return;
                   }
-              } else {
+              }else {
                   httpResponse.append("HTTP/1.1 404 BAD\r\n\r\n");
               }
 
-          }else {
+          } else if (arg[0].equalsIgnoreCase("post") && arg[1].startsWith("/files")) {
+              System.out.println("Directory POST request");
+              String filename = arg[1].substring(7); //ignores first slash (/) as is already included iin directory path
+              String filepath = directoryPath + filename;
+              System.out.println("looking for: " + filepath);
+              File newFile = new File(filepath);
+              try(FileWriter fileWriter = new FileWriter(newFile)) {
+                  while( !inputStreamReader.readLine().isBlank() ) {
+                  }
+                  String s;
+                  while(!(s = inputStreamReader.readLine()).isEmpty())
+                  fileWriter.write(s);
+              }
+              httpResponse.append("HTTP/1.1 201 OK\r\n\r\n");
+          }
+          else {
               httpResponse.append("HTTP/1.1 404 BAD\r\n\r\n");
           }
 
