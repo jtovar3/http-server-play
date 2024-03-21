@@ -62,7 +62,7 @@ public class Main {
                  outputStream.flush();
              }
 
-             //clientSocket.close();
+             clientSocket.close();
          }
   } catch (IOException e) {
        System.out.println("IOException: " + e.getMessage());
