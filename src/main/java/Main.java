@@ -36,7 +36,7 @@ public class Main {
                  if(arg[1].equals("/")) {
                      httpResponse = "HTTP/1.1 200 OK\r\n\r\n";
                  } else {
-                     httpResponse = "HTTP/1.1 400 BAD\r\n\r\n";
+                     httpResponse = "HTTP/1.1 404 BAD\r\n\r\n";
                  }
 
                  outputStream.write(httpResponse.getBytes(StandardCharsets.UTF_8));
